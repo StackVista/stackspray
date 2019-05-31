@@ -1,0 +1,21 @@
+[Unit]
+Description=StackGraph
+After=syslog.target network.target
+
+[Service]
+# Extra large maximum open file limit for HBase/HDFS
+LimitNOFILE=131072
+Type=forking
+User=stackstate
+Group=stackstate
+PIDFile=/opt/stackstate/var/run/stackgraph.pid
+TimeoutStartSec=10min
+TimeoutStopSec=10min
+ExecStart=/opt/stackstate/stackgraph/bin/sg-service.sh start
+ExecReload=/opt/stackstate/stackgraph/bin/sg-service.sh reload
+ExecStop=/opt/stackstate/stackgraph/bin/sg-service.sh stop
+Environment=STACKGRAPH_NODE_NAME={{ stackgraph_server }}
+
+[Install]
+Alias=stackgraph.service
+WantedBy=multi-user.target

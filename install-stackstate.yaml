@@ -1,0 +1,15 @@
+---
+- hosts: all
+  gather_facts: true
+  roles:
+    - { role: base }
+
+- hosts: stackgraph
+  gather_facts: true
+  roles:
+    - { role: stackgraph }
+
+- hosts: stackstate
+  gather_facts: true
+  roles:
+    - { role: stackstate }

@@ -1,0 +1,5 @@
+---
+- name: Register license key
+  become: true
+  become_user: stackstate
+  shell: "/opt/stackstate/bin/sts.sh register --key {{ stackstate_license }}"

@@ -1,0 +1,7 @@
+---
+- name: Start Stackgraph
+  become: true
+  systemd:
+    name: stackgraph
+    daemon_reload: yes
+    state: started

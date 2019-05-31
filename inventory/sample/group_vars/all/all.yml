@@ -1,0 +1,16 @@
+---
+# stackstate_version:
+tmp_location: /tmp
+
+# stackstate_api_key: 
+# stackstate_license:
+# stackstate_receiver_base:
+# stackstate_setup: PRODUCTION
+# stackgraph_server: 
+
+# use_artifactory: false
+
+# If you want to use your own artifactory, this is possible by setting the variables below
+# artifactory_url: Your artifactory url, f.e. https://artifactory.mycompany.com/artifactory/release-candidates/com/company/company-distr
+# artifactory_user: Only required when use_artifactory is true
+# artifactory_password: Only required when use_artifactory is true

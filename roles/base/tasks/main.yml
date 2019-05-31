@@ -1,0 +1,34 @@
+---
+- name: Set fact for RPM as package
+  set_fact:
+    package: "rpm"
+  when: ansible_pkg_mgr in ['yum', 'dnf']
+
+- name: Set fact for DEB as package
+  set_fact:
+    package: "deb"
+  when: ansible_pkg_mgr in ['apt']
+
+- name: Install Java 8 JDK using apt
+  become: true
+  apt:
+    name: openjdk-8-jdk
+    update_cache: yes
+  when: package == "deb"
+
+- name: Install Java 8 JDK using yum
+  become: true
+  yum:
+    name: java-1.8.0-openjdk
+    update_cache: yes
+  when: package == "rpm"
+  
+
+# Set Ansible fact that Java has completed installation. This is so that this role can be used in
+# other dependent roles. Those roles can check for this fact to determine whether or not this role
+# should be run. Failing to do so will mean that this role is executed even if it has already been run.
+- name: Set fact java_8_installed
+  set_fact:
+    java_8_installed: true
+  tags:
+    - java_install

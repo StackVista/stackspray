@@ -1,0 +1,8 @@
+---
+- import_tasks: filename/main.yml
+
+- import_tasks: install/main.yml
+
+- import_tasks: license/main.yml
+
+- import_tasks: start/main.yml

@@ -1,0 +1,22 @@
+---
+- name: Set temp filename
+  set_fact:
+    filename: "stackstate.rpm"
+    package: "rpm"
+  when: ansible_pkg_mgr in ['yum', 'dnf']
+
+- name: Set temp filename
+  set_fact:
+    filename: "stackstate.deb"
+    package: "deb"
+  when: ansible_pkg_mgr in ['apt']
+
+- name: Set filename to be downloaded
+  set_fact:
+    download_filename: "stackstate-{{ stackstate_version.replace('-', '_') }}-1.x86_64.rpm"
+  when: ansible_pkg_mgr in ['yum', 'dnf']
+
+- name: Set filename to be downloaded
+  set_fact:
+    download_filename: "stackstate_{{ stackstate_version.replace('v', '').replace('-', '+').replace('_', '+') }}~ubuntu1604_amd64.deb"
+  when: ansible_pkg_mgr in ['apt']

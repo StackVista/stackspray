@@ -1,0 +1,55 @@
+---
+- name: Download from public download page
+  get_url:
+    url: "https://5fzd4zyw2d.execute-api.eu-west-1.amazonaws.com/prod/getfile/{{ download_filename }}?licencekey={{ stackstate_license }}"
+    dest: "{{ tmp_location }}/{{ filename }}"
+    timeout: 30
+  when: not (use_artifactory is defined) or use_artifactory == false
+
+- name: Download from artifactory
+  get_url:
+    url: "{{ artifactory_url }}/{{ stackstate_version }}/{{ download_filename }}"
+    dest: "{{ tmp_location }}/{{ filename }}"
+    url_username: "{{ artifactory_user }}"
+    url_password: "{{ artifactory_password }}"
+    timeout: 30
+  when: use_artifactory is defined and use_artifactory == true
+
+- name: Install stackstate
+  become: true
+  apt:
+    deb: "{{ tmp_location }}/{{ filename }}"
+  environment:
+    LICENCE_KEY: "{{ stackstate_license }}"
+    RECEIVER_BASE_URL: "{{ stackstate_receiver_base }}"
+    API_KEY: "{{ stackstate_api_key }}"
+    SETUP: "{{ stackstate_setup }}"
+  when: package == "deb"
+
+- name: Install stackstate
+  become: true
+  yum:
+    name: "{{ tmp_location }}/{{ filename }}"
+    state: present
+  environment:
+    LICENCE_KEY: "{{ stackstate_license }}"
+    RECEIVER_BASE_URL: "{{ stackstate_receiver_base }}"
+    API_KEY: "{{ stackstate_api_key }}"
+    SETUP: "{{ stackstate_setup }}"
+  when: package == "rpm"
+  
+- name: Disable stackgraph
+  become: true
+  systemd:
+    name: stackgraph
+    state: stopped
+  when: "'stackgraph' in groups | default([])"
+
+- name: Update service configuration
+  become: true
+  template:
+    src: stackstate-service.j2
+    dest: /lib/systemd/system/stackstate.service
+    owner: root
+    mode: 0644
+  when: "'stackgraph' in groups | default([])"

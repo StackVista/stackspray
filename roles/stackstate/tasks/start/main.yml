@@ -1,0 +1,7 @@
+---
+- name: Start Stackstate
+  become: true
+  systemd:
+    name: stackstate
+    daemon_reload: yes
+    state: started

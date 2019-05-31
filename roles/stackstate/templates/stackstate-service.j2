@@ -1,0 +1,19 @@
+[Unit]
+Description=StackState System monitor Service
+After=syslog.target network.target
+
+[Service]
+LimitNOFILE=131072
+Type=forking
+User=stackstate
+Group=stackstate
+PIDFile=/opt/stackstate/var/run/stackstate.pid
+ExecStart=/opt/stackstate/bin/sts-service.sh start
+ExecReload=/opt/stackstate/bin/sts-service.sh reload
+ExecStop=/opt/stackstate/bin/sts-service.sh stop
+TimeoutSec=infinity
+Environment=ZOOKEEPER_QUORUM={{ stackgraph_server }}
+
+[Install]
+Alias=stackstate.service
+WantedBy=multi-user.target``` 
